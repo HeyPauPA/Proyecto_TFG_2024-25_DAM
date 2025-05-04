@@ -48,6 +48,7 @@ public class PetManager : MonoBehaviour
     {
         //generamos un numero aleatorio (con el tamanio del array de ountos de ruta)
         int puntoAleatorio = Random.Range(0, waypoints.Length);
+        //Debug.Log("Movimiento a " + puntoAleatorio);
 
         //llamamos al scrip de la mascota (el objeto padre) y realizamos el metodo de movimiento
         //al q le pasamos la posicion del objeto del array
