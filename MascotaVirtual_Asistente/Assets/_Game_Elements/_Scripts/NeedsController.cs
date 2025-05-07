@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NeedsController : MonoBehaviour
 {
+    //[CONTROLADOR DE LAS NECESIDADES DE LA MASCOTA]
     //NECESIDADES van de 0-100
     public int alimento;
     public int descanso;
