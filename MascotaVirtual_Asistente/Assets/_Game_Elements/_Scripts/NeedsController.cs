@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,8 +19,12 @@ public class NeedsController : MonoBehaviour
     //MINIMO PARA EMPEZAR A REDUCIR FELICIDAD
     public int mindesc_ali;
 
+    //datos de ultimas veces realizado alguna accion
+    public DateTime ultimaVezAlimentado;
+    public DateTime ultimaVezDescansado;
+
     //Contructor
-    public NeedsController(int alimento, int descanso, int felicidad, int reduccionAlimento, int reduccionDescanso, int reduccionFelicidad)
+    public void Inicializar(int alimento, int descanso, int felicidad, int reduccionAlimento, int reduccionDescanso, int reduccionFelicidad)
     {
         this.alimento = alimento;
         this.descanso = descanso;
@@ -27,11 +32,18 @@ public class NeedsController : MonoBehaviour
         this.reduccionAlimento = reduccionAlimento;
         this.reduccionDescanso = reduccionDescanso;
         this.reduccionFelicidad = reduccionFelicidad;
+        //para las ultimas veces
+        ultimaVezAlimentado = DateTime.Now;
+        ultimaVezDescansado = DateTime.Now;
     }
 
+    private void Awake()
+    {
+        Inicializar(100, 100, 100, 10, 10, 10);
+    }
     private void Update()
     {
-        //si al pasa una hora del juego
+        //si pasa una hora del juego
         if(TimingManager.timerHoraJuego < 0)
         {
             //las necesidades (menos la felicidad) se reducen
@@ -44,6 +56,11 @@ public class NeedsController : MonoBehaviour
     public void CambioNivelAlimento(int cantidad)
     {
         alimento += cantidad;
+
+        if(cantidad > 0) //cuando aumentamos guardamos el dato de el momento de alimentacion
+        {
+            ultimaVezAlimentado = DateTime.Now;
+        }
         //si el alimento esta a menos de un
         //25 por ciento empieza a bajar la felicidad
         if (alimento < mindesc_ali)
@@ -58,7 +75,10 @@ public class NeedsController : MonoBehaviour
     public void CambioNivelDescanso(int cantidad)
     {
         descanso += cantidad;
-
+        if (cantidad > 0) //cuando aumentamos guardamos el dato de el momento de alimentacion
+        {
+            ultimaVezDescansado = DateTime.Now;
+        }
         //si el descanso esta a menos de un
         //25 por ciento empieza a bajar la felicidad
         if (descanso < mindesc_ali)
