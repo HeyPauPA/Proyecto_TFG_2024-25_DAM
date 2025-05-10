@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,9 +30,13 @@ public class DatabaseManager : MonoBehaviour
                 datosMascota.alimento,
                 datosMascota.descanso,
                 datosMascota.felicidad,
-                10, 10, 10
+                10, 10, 10,
+                DateTime.Parse(datosMascota.ultimaVezAlimentado),
+                DateTime.Parse(datosMascota.ultimaVezDescansado)
                 );
         }
+
+        Debug.Log(DateTime.Parse(datosMascota.ultimaVezAlimentado).Hour);
         
     }
 

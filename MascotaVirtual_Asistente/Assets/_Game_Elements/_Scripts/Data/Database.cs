@@ -15,7 +15,7 @@ public class Database
         string rutaArchivo = Path.Combine(Application.persistentDataPath, nombreGuardado + ".json");
 
         File.WriteAllText(rutaArchivo, archivoGuardadoJson);
-        Debug.Log("Ruta de guardado: " + Path.Combine(Application.persistentDataPath, nombreGuardado + ".json"));
+        //Debug.Log("Ruta de guardado: " + Path.Combine(Application.persistentDataPath, nombreGuardado + ".json"));
     }
 
     public void CargarDatos<T>(string nombreGuardado, System.Action<T> callback)

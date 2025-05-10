@@ -6,8 +6,7 @@ using System;
 [Serializable]
 public class PetData 
 {
-    //LOS DATOS A GUARDAR DE LA MASCOTA
-
+    //[DATOS A GUARDAR DE LA MASCOTA]
     //necesitamos el momento en el q lo hemos alimentado
     //o dado descanso por ultima vez para guardarlo
     public string ultimaVezAlimentado;

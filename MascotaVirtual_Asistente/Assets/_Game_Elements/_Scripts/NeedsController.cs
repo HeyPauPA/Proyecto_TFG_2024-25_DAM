@@ -36,6 +36,20 @@ public class NeedsController : MonoBehaviour
         ultimaVezAlimentado = DateTime.Now;
         ultimaVezDescansado = DateTime.Now;
     }
+    //contructor segundo
+    public void Inicializar(int alimento, int descanso, int felicidad, int reduccionAlimento, 
+        int reduccionDescanso, int reduccionFelicidad, DateTime ultimaVezAlimentado, DateTime ultimaVezDescansado)
+    {
+        this.alimento = alimento;
+        this.descanso = descanso;
+        this.felicidad = felicidad;
+        this.reduccionAlimento = reduccionAlimento;
+        this.reduccionDescanso = reduccionDescanso;
+        this.reduccionFelicidad = reduccionFelicidad;
+        //para las ultimas veces
+        this.ultimaVezAlimentado = ultimaVezAlimentado;
+        this.ultimaVezDescansado = ultimaVezDescansado;
+    }
 
     private void Awake()
     {
@@ -50,23 +64,33 @@ public class NeedsController : MonoBehaviour
             CambioNivelAlimento(-reduccionAlimento);
             CambioNivelDescanso(-reduccionDescanso);        
         }
+
+        ////en caso de q el alimento y el descanso esten elevados
+        //if (alimento > 75 && felicidad > 75)
+        //{
+        //    //la felicidad empieza qa elevar
+        //    CambioNivelFelicidad(+10);
+        //}
     }
 
-    //METODOS PARA LAS NECESIDADES
+    //---------- METODOS PARA LAS NECESIDADES ----------
     public void CambioNivelAlimento(int cantidad)
     {
         alimento += cantidad;
 
-        if(cantidad > 0) //cuando aumentamos guardamos el dato de el momento de alimentacion
+        //cuando aumentamos guardamos el dato del momento de alimentacion
+        if (cantidad > 0) 
         {
             ultimaVezAlimentado = DateTime.Now;
         }
+       
         //si el alimento esta a menos de un
         //25 por ciento empieza a bajar la felicidad
         if (alimento < mindesc_ali)
         {
             CambioNivelFelicidad(-reduccionFelicidad);
         }
+        
         else if (alimento > 100) //para q no nos pasemos de nivel
         { 
             alimento = 100;
@@ -75,16 +99,20 @@ public class NeedsController : MonoBehaviour
     public void CambioNivelDescanso(int cantidad)
     {
         descanso += cantidad;
-        if (cantidad > 0) //cuando aumentamos guardamos el dato de el momento de alimentacion
+        
+        //cuando aumentamos guardamos el dato del momento del descanso
+        if (cantidad > 0) 
         {
             ultimaVezDescansado = DateTime.Now;
         }
+
         //si el descanso esta a menos de un
         //25 por ciento empieza a bajar la felicidad
         if (descanso < mindesc_ali)
         {
             CambioNivelFelicidad(-reduccionFelicidad);
         }
+        
         else if (descanso > 100) //para q no nos pasemos de nivel
         {
             descanso = 100;
@@ -97,7 +125,7 @@ public class NeedsController : MonoBehaviour
         if (felicidad <= 0)
         {
             felicidad = 0; // no podemos reducir mas q 0
-        }
+        } 
         else if (felicidad > 100) //para q no nos pasemos de nivel
         {
             felicidad = 100;
