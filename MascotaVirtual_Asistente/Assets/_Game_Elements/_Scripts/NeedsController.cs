@@ -35,6 +35,9 @@ public class NeedsController : MonoBehaviour
         //para las ultimas veces
         ultimaVezAlimentado = DateTime.Now;
         ultimaVezDescansado = DateTime.Now;
+
+        //actualizacion de barras
+        PetUIController.instance.CambiarImagenBarras(alimento, descanso, felicidad);
     }
     //contructor segundo
     public void Inicializar(int alimento, int descanso, int felicidad, int reduccionAlimento, 
@@ -46,9 +49,13 @@ public class NeedsController : MonoBehaviour
         this.reduccionAlimento = reduccionAlimento;
         this.reduccionDescanso = reduccionDescanso;
         this.reduccionFelicidad = reduccionFelicidad;
+
         //para las ultimas veces
         this.ultimaVezAlimentado = ultimaVezAlimentado;
         this.ultimaVezDescansado = ultimaVezDescansado;
+
+        //actualizacion de barras
+        PetUIController.instance.CambiarImagenBarras(alimento, descanso, felicidad);
     }
 
     private void Awake()
@@ -62,15 +69,17 @@ public class NeedsController : MonoBehaviour
         {
             //las necesidades (menos la felicidad) se reducen
             CambioNivelAlimento(-reduccionAlimento);
-            CambioNivelDescanso(-reduccionDescanso);        
-        }
+            CambioNivelDescanso(-reduccionDescanso);
 
-        ////en caso de q el alimento y el descanso esten elevados
-        //if (alimento > 75 && felicidad > 75)
-        //{
-        //    //la felicidad empieza qa elevar
-        //    CambioNivelFelicidad(+10);
-        //}
+            //en caso de q el alimento y el descanso esten elevados al pasar la hora
+            if (alimento > 75 && descanso > 75)
+            {
+                //la felicidad empieza a elevar
+                CambioNivelFelicidad(+10);
+            } 
+        }
+        //actualizacion de barras
+        PetUIController.instance.CambiarImagenBarras(alimento, descanso, felicidad);
     }
 
     //---------- METODOS PARA LAS NECESIDADES ----------
@@ -90,10 +99,14 @@ public class NeedsController : MonoBehaviour
         {
             CambioNivelFelicidad(-reduccionFelicidad);
         }
-        
-        else if (alimento > 100) //para q no nos pasemos de nivel
-        { 
+
+        else if (alimento > 100) //para q no nos pasemos de nivel [POR ARRIBA] 
+        {
             alimento = 100;
+        }
+        else if (alimento < 0) //para q no nos pasemos de nivel[POR ABAJO]
+        {
+            alimento = 0;
         }
     }
     public void CambioNivelDescanso(int cantidad)
@@ -112,10 +125,14 @@ public class NeedsController : MonoBehaviour
         {
             CambioNivelFelicidad(-reduccionFelicidad);
         }
-        
-        else if (descanso > 100) //para q no nos pasemos de nivel
+
+        else if (descanso > 100) //para q no nos pasemos de nivel [POR ARRIBA] 
         {
             descanso = 100;
+        }
+        else if (descanso < 0) //para q no nos pasemos de nivel[POR ABAJO]
+        {
+            descanso = 0;
         }
     }
     public void CambioNivelFelicidad(int cantidad)
@@ -125,11 +142,16 @@ public class NeedsController : MonoBehaviour
         if (felicidad <= 0)
         {
             felicidad = 0; // no podemos reducir mas q 0
-        } 
-        else if (felicidad > 100) //para q no nos pasemos de nivel
+        }
+        else if (felicidad > 100) //para q no nos pasemos de nivel [POR ARRIBA] 
         {
             felicidad = 100;
         }
+        else if (felicidad < 0) //para q no nos pasemos de nivel[POR ABAJO]
+        {
+            felicidad = 0;
+        }
+
     }
 
 }

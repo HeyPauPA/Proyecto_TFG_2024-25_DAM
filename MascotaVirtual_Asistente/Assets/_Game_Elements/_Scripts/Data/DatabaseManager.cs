@@ -35,9 +35,6 @@ public class DatabaseManager : MonoBehaviour
                 DateTime.Parse(datosMascota.ultimaVezDescansado)
                 );
         }
-
-        Debug.Log(DateTime.Parse(datosMascota.ultimaVezAlimentado).Hour);
-        
     }
 
     private void Update()
