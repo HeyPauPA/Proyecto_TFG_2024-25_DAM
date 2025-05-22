@@ -9,6 +9,7 @@ namespace SimpleCalendar
     /// </summary>
     public class DayButton : MonoBehaviour
     {
+        #region Variables del prefab
         [Tooltip("reference to the text field that displays the day.")]
         [SerializeField] private TextMeshProUGUI dayText;
 
@@ -23,6 +24,7 @@ namespace SimpleCalendar
 
         [Tooltip("Color of the day's box when it is not part of the selected month (AKA a padding day).")]
         [SerializeField] private Color paddingDayColor = new(0.75f, 0.75f, 0.75f);
+        #endregion
 
 
         /// <summary>
@@ -58,6 +60,13 @@ namespace SimpleCalendar
                     GetComponent<UnityEngine.UI.Image>().color = altColor;
                 }
             }
+        }
+    
+        //METODO PARA CUANDO CLICKEO EL DIA
+        public void DiaSeleccionado()
+        {  
+          //llama al metodo de mostrar las tareas del dia seleccionado del task manager
+          TaskManager.instancia.mostrarFechaSeleccionada(myDate);
         }
     }
 }
