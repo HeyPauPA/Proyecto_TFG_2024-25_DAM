@@ -13,8 +13,9 @@ public class TaskManager : MonoBehaviour
     public TextMeshProUGUI fechaSeleccionada;
     public Transform zonaTareas;
     public GameObject prefabTarea;
-    public InputField inputNuevaTarea;
+    public TMP_InputField inputNuevaTarea;
 
+    private DateTime diaSeleccionado;
     private string diaSeleccionadoString;
 
     //lista de tareas (de la clase creada en el taskdata)
@@ -40,12 +41,13 @@ public class TaskManager : MonoBehaviour
     //---------- METODOS DE MOSTRAR TAREAS ----------
 
     /// <summary>
-    /// Metodo qpara mostrar el dia seleccionado como titulo del area de tareas
+    /// Metodo para mostrar el dia seleccionado como titulo del area de tareas
     /// </summary>
-    public void mostrarFechaSeleccionada(DateTime diaSeleccionado)
+    public void mostrarFechaSeleccionada(DateTime nuevoDiaSeleccionado)
     {
-        //guardamos dato de la fecha para tenerla en todo momento
-        diaSeleccionadoString = diaSeleccionado.ToShortDateString();
+        //guardamos dato de la fecha para tenerla en todo momento (tanto en tipo datetime como en string)
+        diaSeleccionado = nuevoDiaSeleccionado;
+        diaSeleccionadoString = nuevoDiaSeleccionado.ToShortDateString();
 
         //necesito q sea shortdatestring para q solo me de la fecha
         if (diaSeleccionado != null)
@@ -74,52 +76,20 @@ public class TaskManager : MonoBehaviour
 
         //BUSCAMOS LAS TAREAS DEL DIA CORRESPONDIENTE
         TasksData tareasDelDia = BuscarTareasPorFecha(diaSeleccionado.ToShortDateString());
-
+        
         //Y LAS MOSTRAMOS (SI TIENE)
         if (tareasDelDia != null)
         {
+            Debug.Log("tareas encontradas");
             foreach (string tarea in tareasDelDia.tareas)
             {
                 GameObject nuevaTarea = Instantiate(prefabTarea, zonaTareas);
-                nuevaTarea.GetComponent<TextMeshProUGUI>().text = tarea;
+                nuevaTarea.GetComponentInChildren<TextMeshProUGUI>().text = tarea;
             }
         }
     }
 
-    public void NuevaTarea(DateTime diaSeleccionado)
-    {
-        //si no hay texto en el imput
-        if (string.IsNullOrWhiteSpace(inputNuevaTarea.text))
-        {
-            Debug.Log("No estoy haciendo nah");
-            return;//no hacemos nada
-        }
-
-        //buscamos las tareas de ese dia
-        TasksData tareasDelDia = BuscarTareasPorFecha(diaSeleccionadoString);
-
-        //Si no hay lista de tareas de ese dia, la crea
-        if (tareasDelDia == null)
-        {
-            Debug.Log("Estoy dentro del tareas del dia");
-            tareasDelDia = new TasksData
-            {
-                fecha = diaSeleccionadoString,
-                tareas = new List<string>() 
-            };
-            listaDeTareasTotales.tareasPorDia.Add(tareasDelDia);
-            Debug.Log("He aniadido una tarea");
-        }
-
-        tareasDelDia.tareas.Add(inputNuevaTarea.text); //mete el texto del imput como tarea
-
-        inputNuevaTarea.text = "";
-        //GuardarEnJson();
-        mostrarTareasParaDiaSeleccionado(diaSeleccionado);//recargamos las tareas de ese dia
-    }
-
-
-    //---------- METODOS DE BUSQUEDA DE TAREAS ----------
+    //---------- METODO DE BUSQUEDA DE TAREAS ----------
     /// <summary>
     /// Metodo para buscar las tareas de dentro de la lista, por una fecha determinada
     /// </summary>
@@ -128,16 +98,57 @@ public class TaskManager : MonoBehaviour
         //Filtramos de dentro de la lista de todas las tareas
         foreach (TasksData tarea in listaDeTareasTotales.tareasPorDia)
         {
-            Debug.Log(tarea.fecha);
             //aquellas que coincidan con la fecha seleccionada
             if (tarea.fecha == fecha)
             {
                 return tarea;
             }
-                
         }
         return null;
     }
+
+    //---------- METODO DE NUEVA TAREA ----------
+    /// <summary>
+    /// Metodo para crear nuevas tareas en el dia elegido
+    /// </summary>
+    public void NuevaTarea()
+    {
+        //si no hay texto en el imput
+        if (string.IsNullOrWhiteSpace(inputNuevaTarea.text))
+        {
+            return;//no hacemos nada
+        }
+        else 
+        {
+            //buscamos las tareas de ese dia
+            TasksData tareasDelDia = BuscarTareasPorFecha(diaSeleccionado.ToShortDateString());
+
+            //Si no hay lista de tareas de ese dia, la crea
+            if (tareasDelDia == null)
+            {
+                Debug.Log("Estoy dentro del tareas del dia y como no habia creo nuevas");
+                tareasDelDia = new TasksData
+                {
+                    fecha = diaSeleccionado.ToShortDateString(),
+                    tareas = new List<string>() 
+                };
+                listaDeTareasTotales.tareasPorDia.Add(tareasDelDia);
+                Debug.Log("He aniadido una tarea");
+            }
+
+            tareasDelDia.tareas.Add(inputNuevaTarea.text); //mete el texto del imput como tarea
+
+            inputNuevaTarea.text = "";
+            
+            //GuardarEnJson();
+
+            mostrarTareasParaDiaSeleccionado(diaSeleccionado);
+        }
+
+    }
+
+
+ 
 
 }
 

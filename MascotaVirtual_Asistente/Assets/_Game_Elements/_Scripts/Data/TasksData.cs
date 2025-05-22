@@ -13,12 +13,6 @@ public class TasksData
 
     //y las tareas de esa fecha concreta
     public List<string> tareas = new List<string>();
-
-    //public TasksData(string fecha, List<string> tareas)
-    //{
-    //    this.fecha = fecha;
-    //    this.tareas = tareas;
-    //}
 }
 //CREO UN TIPO DE LISTAS QUE SERAN AQUELLAS QUE PUEDAN GUARDAR LOS DATOS DE LAS TAREAS
 [System.Serializable]
