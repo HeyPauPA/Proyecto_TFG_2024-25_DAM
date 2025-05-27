@@ -1387,9 +1387,10 @@ MonoBehaviour:
   descanso: 100
   felicidad: 100
   reduccionAlimento: 10
-  reduccionDescanso: 10
-  reduccionFelicidad: 10
+  reduccionDescanso: 7
+  reduccionFelicidad: 5
   mindesc_ali: 25
+  mascota: {fileID: 0}
 --- !u!1 &6090009248824291951
 GameObject:
   m_ObjectHideFlags: 0
@@ -1726,7 +1727,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6090009249836345070}
-  m_LocalRotation: {x: -0, y: -0, z: 0.73756653, w: -0.67527455}
+  m_LocalRotation: {x: -0, y: -0, z: 0.7375669, w: -0.6752742}
   m_LocalPosition: {x: -0.03677535, y: -0.06128004, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

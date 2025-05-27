@@ -21,6 +21,17 @@ public class TaskManager : MonoBehaviour
     //lista de tareas (de la clase creada en el taskdata)
     private ListaDeTareas listaDeTareasTotales = new ListaDeTareas();
 
+    //--database
+    private Database db = new Database();
+    private string nombreArchivo = "datos_tareasGuardadas";
+
+    //NOTIFICACIONES
+    //dato del dia en el que estamos
+    DateTime diaActual = DateTime.Now;
+    //conexion con el notification manager
+    public NotificationManager ntMg = new NotificationManager() ;
+    private bool notificacionEnviadasHoy = false;
+
     public void Awake()
     {
         //Singleton simple
@@ -35,7 +46,32 @@ public class TaskManager : MonoBehaviour
 
     private void Start()
     {
-        //TODO Cargar datos del json
+        //Cargar datos del json
+        db.CargarDatos<ListaDeTareas>(nombreArchivo, (datosCargados) =>
+        {
+            listaDeTareasTotales = datosCargados;
+        });
+
+    }
+    private void Update()
+    {
+        //Si no ha mandado la notificacion hoy
+        if(notificacionEnviadasHoy != true)
+        {
+            //Si el dia en el que nos encontramos, coincide con el dia en el que hay alguna tarea, manda notificacion     
+            TasksData tareasdiariasParaNotificacion = BuscarTareasPorFecha(diaActual.ToShortDateString());
+
+            if (tareasdiariasParaNotificacion != null) 
+            {
+                foreach (string tarea in tareasdiariasParaNotificacion.tareas)
+                {
+                    ntMg.mandarNotificacionTarea("Tarea diaria:", tarea);
+                    Debug.Log(tarea);
+                }
+                notificacionEnviadasHoy = true;
+            }
+        }
+        
     }
 
     //---------- METODOS DE MOSTRAR TAREAS ----------
@@ -139,16 +175,13 @@ public class TaskManager : MonoBehaviour
             tareasDelDia.tareas.Add(inputNuevaTarea.text); //mete el texto del imput como tarea
 
             inputNuevaTarea.text = "";
-            
-            //GuardarEnJson();
+
+            //GUARDAMOS LOS DATOS EN JSON
+            db.GuardarDatos(nombreArchivo, listaDeTareasTotales);
 
             mostrarTareasParaDiaSeleccionado(diaSeleccionado);
         }
 
     }
-
-
- 
-
 }
 

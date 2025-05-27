@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class NeedsController : MonoBehaviour
@@ -22,6 +23,10 @@ public class NeedsController : MonoBehaviour
     //datos de ultimas veces realizado alguna accion
     public DateTime ultimaVezAlimentado;
     public DateTime ultimaVezDescansado;
+
+    //Mascota
+    public PetController mascota;
+
 
     //Contructor
     public void Inicializar(int alimento, int descanso, int felicidad, int reduccionAlimento, int reduccionDescanso, int reduccionFelicidad)
@@ -80,6 +85,9 @@ public class NeedsController : MonoBehaviour
         }
         //actualizacion de barras
         PetUIController.instance.CambiarImagenBarras(alimento, descanso, felicidad);
+
+        //LLAMADA A ANIMACIONES
+       // realizarAnimaciones();
     }
 
     //---------- METODOS PARA LAS NECESIDADES ----------
@@ -104,7 +112,7 @@ public class NeedsController : MonoBehaviour
         {
             alimento = 100;
         }
-        else if (alimento < 0) //para q no nos pasemos de nivel[POR ABAJO]
+        else if (alimento <= 0) //para q no nos pasemos de nivel[POR ABAJO]
         {
             alimento = 0;
         }
@@ -130,7 +138,7 @@ public class NeedsController : MonoBehaviour
         {
             descanso = 100;
         }
-        else if (descanso < 0) //para q no nos pasemos de nivel[POR ABAJO]
+        else if (descanso <= 0) //para q no nos pasemos de nivel[POR ABAJO]
         {
             descanso = 0;
         }
@@ -147,11 +155,27 @@ public class NeedsController : MonoBehaviour
         {
             felicidad = 100;
         }
-        else if (felicidad < 0) //para q no nos pasemos de nivel[POR ABAJO]
+        else if (felicidad <= 0) //para q no nos pasemos de nivel[POR ABAJO]
         {
             felicidad = 0;
         }
 
     }
 
+    //---------- METODO PARA LA ANIMACIONES ----------
+    private void realizarAnimaciones()
+    {
+        Debug.Log("Hago animaciones");
+        
+        if(descanso < 10)
+        {
+            Debug.Log("cansado");
+            mascota.Cansando();
+        }
+        else if (alimento < 10)
+        {
+            Debug.Log("hambriento");
+            mascota.Hambriento();
+        }
+    }
 }
