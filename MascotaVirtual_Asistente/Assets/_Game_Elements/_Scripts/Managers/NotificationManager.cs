@@ -1,67 +1,102 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Notifications.Android;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class NotificationManager : MonoBehaviour
 {
-    //variables
-    public Toggle checkerNotificaciones;
+    public Toggle checkerNotificaciones; // Asignar desde el inspector
+
+    private const string canalTareas = "notificaciones_tareas";
+    private const string canalAyudas = "notificaciones_ayudas";
+
     void Start()
     {
-        //CANAL 1 PARA NOTIFICACIONES
-        var channel = new AndroidNotificationChannel()
+        ////CANAL 1 PARA NOTIFICACIONES DE TAREAS
+        var channelTareas = new AndroidNotificationChannel()
         {
-            Id = "notificaciones_tareas",
-            Name = "Default Channel",
+            Id = canalTareas,
+            Name = "Canal de Tareas",
             Importance = Importance.High,
-            Description = "Notificaciones de tareas",
+            Description = "Notificaciones de tareas diarias",
         };
-        AndroidNotificationCenter.RegisterNotificationChannel(channel);
+        AndroidNotificationCenter.RegisterNotificationChannel(channelTareas);
 
         //CANAL 2 PARA NOTIFICACIONES DE CONSEJOS
-        var channelHelps = new AndroidNotificationChannel()
+        var channelAyudas = new AndroidNotificationChannel()
         {
-            Id = "notificaciones_ayudas",
-            Name = "ChannelHelps",
+            Id = canalAyudas,
+            Name = "Canal de Ayudas",
             Importance = Importance.High,
-            Description = "Notificaciones de ayudas",
+            Description = "Notificaciones de consejos de salud",
         };
-        AndroidNotificationCenter.RegisterNotificationChannel(channelHelps);
+        AndroidNotificationCenter.RegisterNotificationChannel(channelAyudas);
 
-        //Activamos las notificaciones de ayuda solo si no estan activas ya
-        if (checkerNotificaciones.isOn == true && AndroidNotificationCenter.CheckScheduledNotificationStatus(1) != NotificationStatus.Scheduled)
+        //RECOJEMOS EL ESTADO DEL CHECKER DEL PLAYERPREFS
+        bool notificacionesActivas = PlayerPrefs.GetInt("notificacionesActivadas", 1) == 1;
+        checkerNotificaciones.isOn = notificacionesActivas;
+
+        // Si están activadas notificaciones y no se han programado aún
+        int savedId = PlayerPrefs.GetInt("idNotificacionAyuda", -1);
+        if (notificacionesActivas && AndroidNotificationCenter.CheckScheduledNotificationStatus(savedId) != NotificationStatus.Scheduled)
         {
-            mandarNotificacionAyudas("¡Mantente sano!", "recuerda tomar agua");
+            ProgramarNotificacionAyudas();
         }
     }
 
-    //----- METODOS DE MANDO DE NOTIFICACIONES -----
+
+    //--- METODO DEL CHECKER ---
+    /// <summary>
+    ///METODO PARA GUARDAR EL DATO DEL CHECKER (EN EL PLAYERPREFS)
+    /// </summary>
+    public void CambiarEstadoNotificaciones()
+    {
+        //Si el checker esta on activo el programador de las noticicaiones
+        if (checkerNotificaciones.isOn)
+        {
+            ProgramarNotificacionAyudas();
+            PlayerPrefs.SetInt("notificacionesActivadas", 1);
+        }
+        else //si no las cancelo
+        {
+            AndroidNotificationCenter.CancelAllScheduledNotifications();
+            PlayerPrefs.SetInt("notificacionesActivadas", 0);
+        }
+    }
+
+    // ----- METODOS DE MANDO DE NOTIFICACIONES -----
     /// <summary>
     /// METODO para mandar la notificacion de una tarea en el dia en el que estas, con el titulo de esta
     /// </summary>
-    public void mandarNotificacionTarea(string tituloNotificacion, string textoNotificacion)
+    public void mandarNotificacionTarea(string titulo, string texto)
     {
-        var notification = new AndroidNotification();
-        notification.Title = tituloNotificacion;
-        notification.Text = textoNotificacion;
-        notification.FireTime= System.DateTime.Now.AddSeconds(1);
+        var notificacion = new AndroidNotification
+        {
+            Title = titulo,
+            Text = texto,
+            FireTime = DateTime.Now.AddSeconds(1)
+        };
 
-        AndroidNotificationCenter.SendNotification(notification, "notificaciones_tareas");
+        AndroidNotificationCenter.SendNotification(notificacion, canalTareas);
     }
+
     /// <summary>
     /// METODO para mandar la notificacion de una ayuda al usuario cada 2h desde q se abre por primera vez la aplicacion
     /// </summary>
-    public void mandarNotificacionAyudas(string tituloNotificacion, string textoNotificacion)
+    private void ProgramarNotificacionAyudas()
     {
-        var notification = new AndroidNotification();
-        notification.Title = tituloNotificacion;
-        notification.Text = textoNotificacion;
-        notification.FireTime = DateTime.Now.AddHours(2); // Primera vez en 2h
-        notification.RepeatInterval = TimeSpan.FromHours(2); // Luego cada 2h
+        var notificacion = new AndroidNotification
+        {
+            Title = "¡Mantente sano!",
+            Text = "Recuerda tomar agua",
+            FireTime = DateTime.Now.AddSeconds(10),
+            RepeatInterval = TimeSpan.FromSeconds(30)
+        };
 
-        AndroidNotificationCenter.SendNotification(notification, "notificaciones_ayudas");       
+        int id = AndroidNotificationCenter.SendNotification(notificacion, canalAyudas);
+        PlayerPrefs.SetInt("idNotificacionAyuda", id);
     }
+
+
+    
 }
