@@ -40,7 +40,7 @@ public class PetController : MonoBehaviour
     public void Cansando()
     {
         //Activamos animacion
-        animatorMascota.SetTrigger("Cansando");
+        animatorMascota.SetTrigger("Cansado");
     }
     public void Triste() //falta de hambre y sueño
     {

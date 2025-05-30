@@ -38,7 +38,8 @@ public class NotificationManager : MonoBehaviour
 
         // Si están activadas notificaciones y no se han programado aún
         int savedId = PlayerPrefs.GetInt("idNotificacionAyuda", -1);
-        if (notificacionesActivas && AndroidNotificationCenter.CheckScheduledNotificationStatus(savedId) != NotificationStatus.Scheduled)
+        if (notificacionesActivas && AndroidNotificationCenter.CheckScheduledNotificationStatus(savedId) 
+            != NotificationStatus.Scheduled)
         {
             ProgramarNotificacionAyudas();
         }
@@ -91,8 +92,9 @@ public class NotificationManager : MonoBehaviour
             Text = "Recuerda tomar agua",
             FireTime = DateTime.Now.AddSeconds(10),
             RepeatInterval = TimeSpan.FromSeconds(30)
+            
         };
-
+        Debug.Log("Noti salud");
         int id = AndroidNotificationCenter.SendNotification(notificacion, canalAyudas);
         PlayerPrefs.SetInt("idNotificacionAyuda", id);
     }

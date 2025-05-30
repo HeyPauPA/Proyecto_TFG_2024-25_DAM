@@ -82,10 +82,10 @@ public class TaskManager : MonoBehaviour
     public void mostrarFechaSeleccionada(DateTime nuevoDiaSeleccionado)
     {
         //guardamos dato de la fecha para tenerla en todo momento (tanto en tipo datetime como en string)
+        //necesito q sea shortdatestring para q solo me de la fecha
         diaSeleccionado = nuevoDiaSeleccionado;
         diaSeleccionadoString = nuevoDiaSeleccionado.ToShortDateString();
 
-        //necesito q sea shortdatestring para q solo me de la fecha
         if (diaSeleccionado != null)
         {
             fechaSeleccionada.text = ("[ " + diaSeleccionadoString + " ]");
