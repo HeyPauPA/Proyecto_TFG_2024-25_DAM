@@ -53,6 +53,17 @@ public class DatabaseManager : MonoBehaviour
                 );
             GuardarMascota(datosMascota);
         }
+        //CADA FRAME GUARDAMOS LOS DATOS DE LA MASCOTA
+        ////guardamos los datos de la mascota
+        //PetData datosMascota2 = new PetData
+        //    (
+        //        needsController.ultimaVezAlimentado.ToString(),
+        //        needsController.ultimaVezDescansado.ToString(),
+        //        needsController.alimento,
+        //        needsController.descanso,
+        //        needsController.felicidad
+        //    );
+        //GuardarMascota(datosMascota2);
     }
 
     //METODO PARA GUARDAR LOS DATOS DE LA MASCOTA
